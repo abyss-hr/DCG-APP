@@ -1,0 +1,185 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Modal, useColorScheme, Dimensions } from 'react-native';
+import { lightTheme, darkTheme } from '@/constants/Colors';
+import VibratingTouchableOpacity from '@/components/vibration/VibratingTouchableOpacity';
+import { shuffleArray } from '@/utils/arrayUtils';
+
+const { height } = Dimensions.get('window');
+
+type Question = {
+  question: string;
+  options: string[];
+  answer: string;
+};
+
+const questions: Question[] = [
+  { question: 'What is Dubrovnik famously known as?', options: ['Pearl of the Adriatic', 'City of Lakes', 'Mediterranean Jewel'], answer: 'Pearl of the Adriatic' },
+  { question: 'Which TV series was filmed in Dubrovnik?', options: ['Breaking Bad', 'Game of Thrones', 'The Witcher'], answer: 'Game of Thrones' },
+  { question: 'What sea borders Dubrovnik?', options: ['Ionian Sea', 'Aegean Sea', 'Adriatic Sea'], answer: 'Adriatic Sea' },
+  { question: 'Which fortress overlooks Dubrovnik?', options: ['Lovrijenac', 'Petar', 'Klis'], answer: 'Lovrijenac' },
+  { question: 'Which country is Dubrovnik in?', options: ['Croatia', 'Montenegro', 'Slovenia'], answer: 'Croatia' },
+  { question: 'What currency is used in Dubrovnik?', options: ['Euro', 'Kuna', 'Dollar'], answer: 'Euro' },
+  { question: 'What is the name of the main street in the Old Town?', options: ['Stradun', 'Plitvice', 'Marjan'], answer: 'Stradun' },
+  { question: 'When did Dubrovnik join UNESCO?', options: ['1979', '1995', '1960'], answer: '1979' },
+  { question: 'What mountain overlooks Dubrovnik?', options: ['Srd', 'Dinara', 'Biokovo'], answer: 'Srd' },
+  { question: 'What is a local seafood dish?', options: ['Black Risotto', 'Goulash', 'Moussaka'], answer: 'Black Risotto' },
+  { question: 'What is the island near Dubrovnik?', options: ['Lokrum', 'Hvar', 'Krk'], answer: 'Lokrum' },
+  { question: 'Dubrovnik was once...', options: ['An independent republic', 'Part of Venice', 'A Turkish city'], answer: 'An independent republic' },
+  { question: 'Famous festival in summer?', options: ['Dubrovnik Summer Festival', 'Sea Dance', 'Exit'], answer: 'Dubrovnik Summer Festival' },
+  { question: 'Historic name of Dubrovnik?', options: ['Ragusa', 'Dalma', 'Dracova'], answer: 'Ragusa' },
+  { question: 'What was Dubrovnik famous for in trade?', options: ['Salt', 'Silk', 'Gold'], answer: 'Salt' },
+  { question: 'What architectural style dominates Old Town?', options: ['Baroque', 'Gothic', 'Modern'], answer: 'Baroque' },
+  { question: 'What body guards the harbor?', options: ['Fort Revelin', 'Fort Petka', 'Fort Minceta'], answer: 'Fort Revelin' },
+  { question: 'What’s the main religion?', options: ['Catholicism', 'Orthodoxy', 'Islam'], answer: 'Catholicism' },
+  { question: 'Which saint protects Dubrovnik?', options: ['Saint Blaise', 'Saint Mark', 'Saint Paul'], answer: 'Saint Blaise' },
+  { question: 'What’s the famous filming location?', options: ['King’s Landing', 'Winterfell', 'Hogwarts'], answer: 'King’s Landing' }
+];
+
+const getAwardMessage = (percentage: number) => {
+  if (percentage === 100) return '🍺 Ohh yeah! Someone give this person a cold beer – you deserve it!';
+  if (percentage >= 80) return '👏 Ohh, someone came prepared – nice to see that score!';
+  if (percentage >= 60) return "✅ That's good, but you missed some things in Dubrovnik to learn!";
+  if (percentage >= 40) return '🤓 We know what we know, and we Google the rest!';
+  if (percentage >= 20) return '😅 Not bad... maybe walk around the Old Town one more time!';
+  return '😬 More luck next time! Dubrovnik is calling you back!';
+};
+
+export default function DubrovnikQuiz() {
+  const [shuffled, setShuffled] = useState<Question[]>(() => shuffleArray(questions));
+  const [current, setCurrent] = useState<number>(-1);
+  const [popup, setPopup] = useState<'correct' | 'wrong' | 'timeout' | null>(null);
+  const [timer, setTimer] = useState<number>(10);
+  const [score, setScore] = useState<number>(0);
+  const [selected, setSelected] = useState<string | null>(null);
+  const colorScheme = useColorScheme();
+  const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (current >= 0 && current < shuffled.length) {
+      timerRef.current = setInterval(() => {
+        setTimer((prev) => {
+          if (prev === 1) {
+            clearInterval(timerRef.current!);
+            setPopup('timeout');
+            setSelected(null);
+            setTimeout(() => {
+              setPopup(null);
+              setCurrent((prev) => prev + 1);
+              setTimer(10);
+            }, 1000);
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timerRef.current!);
+  }, [current]);
+
+  const handleAnswer = (option: string) => {
+    clearInterval(timerRef.current!);
+    const correct = shuffled[current]?.answer === option;
+    setPopup(correct ? 'correct' : 'wrong');
+    setSelected(option);
+    if (correct) setScore((prev) => prev + 5);
+    setTimeout(() => {
+      setPopup(null);
+      setCurrent((prev) => prev + 1);
+      setTimer(10);
+      setSelected(null);
+    }, 1000);
+  };
+
+  const isQuizFinished = current >= shuffled.length;
+  const percentage = Math.round((score / (questions.length * 5)) * 100);
+  const question = current >= 0 && current < shuffled.length ? shuffled[current] : null;
+
+  return (
+    <View style={[styles.container, { backgroundColor: theme.background }]}>      
+      {current === -1 && (
+        <>
+          <Text style={[styles.question, { color: theme.title }]}>🏰 How much do you know about Dubrovnik?</Text>
+          <VibratingTouchableOpacity style={[styles.button, { backgroundColor: theme.button }]} onPress={() => setCurrent(0)}>
+            <Text style={[styles.buttonText, { color: '#fff' }]}>Start Quiz</Text>
+          </VibratingTouchableOpacity>
+        </>
+      )}
+
+      {question && !isQuizFinished && (
+        <>
+          <Text style={[styles.topRightPlain, { color: theme.description }]}>{current + 1}/{questions.length}</Text>
+          <Text style={[styles.question, { color: theme.title }]}>{question.question}</Text>
+          <Text style={[styles.timer, { color: theme.description }]}>⏳ Time left: {timer}s</Text>
+
+          {question.options.map((option: string) => {
+            const isCorrect = option === question.answer;
+            const isSelected = selected === option;
+            const highlight = selected && (isCorrect ? styles.correct : isSelected ? styles.wrong : {});
+
+            return (
+              <VibratingTouchableOpacity
+                key={option}
+                style={[styles.button, { backgroundColor: theme.button }, highlight]}
+                onPress={() => handleAnswer(option)}
+                disabled={!!selected}
+              >
+                <Text style={[styles.buttonText, { color: '#fff', fontWeight: isCorrect && selected ? 'bold' : 'normal' }]}>
+                  {option}
+                </Text>
+              </VibratingTouchableOpacity>
+            );
+          })}
+        </>
+      )}
+
+      {isQuizFinished && (
+        <>
+          <Text style={[styles.question, { color: theme.title }]}>Thanks for playing!</Text>
+          <Text style={[styles.score, { color: theme.title }]}>🎯 Your Score: {score} / {questions.length * 5}</Text>
+          <Text style={[styles.award, { color: theme.description }]}>{getAwardMessage(percentage)}</Text>
+          <VibratingTouchableOpacity style={[styles.button, { backgroundColor: theme.button }]} onPress={() => {
+            setShuffled(shuffleArray(questions));
+            setCurrent(0);
+            setTimer(10);
+            setScore(0);
+          }}>
+            <Text style={[styles.buttonText, { color: '#fff' }]}>Play Again</Text>
+          </VibratingTouchableOpacity>
+        </>
+      )}
+
+      <View style={styles.bottomBar}>
+        <Text style={[styles.score, { color: theme.title }]}>Score: {score}</Text>
+      </View>
+
+      <Modal transparent visible={popup !== null} animationType="fade">
+        <View style={[styles.modalOverlayPopup, { backgroundColor: 'transparent' }]}>          
+          <View style={[styles.dialogBox, { backgroundColor: theme.background }]}>            
+            <Text style={[styles.dialogText, { color: theme.title }]}>              
+              {popup === 'correct' && '👍 Correct!'}
+              {popup === 'wrong' && `❌ Wrong! Correct: ${question?.answer}`}
+              {popup === 'timeout' && `⌛ Time is over! Answer: ${question?.answer}`}
+            </Text>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, justifyContent: 'center', padding: 20 },
+  question: { fontSize: 22, fontWeight: '600', textAlign: 'center', marginBottom: 20 },
+  timer: { fontSize: 14, textAlign: 'center', marginBottom: 16 },
+  button: { padding: 14, borderRadius: 10, alignItems: 'center', marginVertical: 8 },
+  correct: { borderWidth: 2, borderColor: '#00c851' },
+  wrong: { borderWidth: 2, borderColor: '#ff4444' },
+  buttonText: { fontSize: 16, fontWeight: 'bold' },
+  modalOverlayPopup: { position: 'absolute', top: height * 0.2, left: 0, right: 0, alignItems: 'center', justifyContent: 'flex-start' },
+  dialogBox: { padding: 20, borderRadius: 12, alignItems: 'center', elevation: 4 },
+  dialogText: { fontSize: 18, fontWeight: 'bold' },
+  score: { fontSize: 16, textAlign: 'center', marginTop: 10 },
+  bottomBar: { position: 'absolute', bottom: 20, alignSelf: 'center' },
+  award: { marginTop: 20, fontSize: 16, textAlign: 'center', paddingHorizontal: 10 },
+  topRightPlain: { position: 'absolute', top: 20, right: 20, fontSize: 12, fontWeight: '600' }
+});

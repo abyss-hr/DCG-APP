@@ -1,59 +1,68 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
+// File: app/_layout.tsx
+// Description: Root layout — wraps the entire app with providers and global gradient background.
+
+'use client';
+
+import React from 'react';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { StatusBar } from 'expo-status-bar';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { useColorScheme } from '@/components/useColorScheme';
+// 🧩 Theme & Providers (centralized)
+import { ThemeProvider, useTheme, GradientBackground } from '@/theme';
+import { FavoritesProvider } from '@/components/context/FavoritesContext';
+import { OfflineProvider } from '@/components/context/OfflineContext';
+import { LocationProvider } from '@/components/context/LocationContext';
+import { ZoomProvider } from '@/components/context/ZoomContext';
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
+// ⚙️ System UI
+import AppStatusBar from '@/components/system/AppStatusBar';
 
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
-  });
-
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
-  return <RootLayoutNav />;
+/**
+ * InnerStack
+ * -----------
+ * Handles navigation + status bar styling according to active theme.
+ */
+function InnerStack() {
+  const { effectiveMode } = useTheme();
+  return (
+    <>
+      <AppStatusBar />
+      <Stack screenOptions={{ headerShown: false }} />
+      <StatusBar style={effectiveMode === 'dark' ? 'light' : 'dark'} />
+    </>
+  );
 }
 
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
+/**
+ * RootLayout
+ * -----------
+ * Main app entry — wraps everything in:
+ * - GestureHandlerRootView
+ * - SafeAreaProvider
+ * - ThemeProvider (light/dark/system)
+ * - FavoritesProvider (user favorites context)
+ * - GradientBackground (global animated theme backdrop)
+ */
+export default function RootLayout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <ThemeProvider>
+          <ZoomProvider>
+            <OfflineProvider>
+              <LocationProvider>
+                <FavoritesProvider>
+                  <GradientBackground>
+                    <InnerStack />
+                  </GradientBackground>
+                </FavoritesProvider>
+              </LocationProvider>
+            </OfflineProvider>
+          </ZoomProvider>
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
