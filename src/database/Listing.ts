@@ -7,9 +7,12 @@ export type Listing = {
 
   categoryId: string;
   categoryName: string;
+  categoryIcon?: string;
 
-  filterMain: string;
-  filterExtra: string;
+  filterMain?: string;
+  filterMainIcon?: string;
+  filterExtra?: string;
+  filterExtraIcon?: string;
 
   locationMain: string;
   locationSub?: string;

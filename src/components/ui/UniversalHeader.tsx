@@ -1,16 +1,16 @@
 // src/components/ui/UniversalHeader.tsx
 // 🧠 Displays a universal top header with animated scroll,
 // theme toggle, left/right icons, and gradient background.
+// Updated: 14. prosinca 2025. - Migrated from Feather to Lucide icons
 
 import React from "react";
 import { Animated, Pressable, StyleSheet, View, Text } from "react-native";
 import { useNavigation } from "expo-router";
-import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { useTheme, typography } from "@/theme";
+import { useTheme, typography, AppIcons, type IconName } from "@/theme";
 import type { ColorValue } from "react-native";
 
 export const HEADER_BODY = 56;
@@ -19,8 +19,6 @@ export function getHeaderHeights(insetsTop: number) {
   const headerTotal = HEADER_BODY + insetsTop;
   return { headerTotal };
 }
-
-type IconName = React.ComponentProps<typeof Feather>["name"];
 
 type LeftIcon =
   | {
@@ -31,7 +29,7 @@ type LeftIcon =
   | undefined;
 
 type RightIcon =
-  | { type?: "icon"; icon: IconName; onPress?: () => void; color?: ColorValue }
+  | { type?: "icon"; icon: IconName; onPress?: () => void; color?: ColorValue; iconProps?: any }
   | { type: "themeToggle" }
   | { type: "custom"; render: () => React.ReactNode };
 
@@ -72,28 +70,30 @@ export default function UniversalHeader({
   const opacity = theme.headerOpacity ?? 1;
 
   // LEFT ICON
-  const renderLeft =
-    left && (!left.autoBack || canGoBack) ? (
-      <Pressable
-        hitSlop={8}
-        style={styles.edgeBtn}
-        onPress={() => {
-          doHaptic();
-          if (left.autoBack && canGoBack) navigation.goBack();
-          else left.onPress?.();
-        }}
-      >
-        <Feather name={left.icon} size={28} color={theme.headerIcon} />
-      </Pressable>
-    ) : (
-      <View style={styles.edgeBtn} />
-    );
+  const LeftIcon = left && (!left.autoBack || canGoBack) ? AppIcons[left.icon] : null;
+  
+  const renderLeft = LeftIcon ? (
+    <Pressable
+      hitSlop={8}
+      style={styles.edgeBtn}
+      onPress={() => {
+        doHaptic();
+        if (left?.autoBack && canGoBack) navigation.goBack();
+        else left?.onPress?.();
+      }}
+    >
+      <LeftIcon size={28} color={theme.headerIcon} />
+    </Pressable>
+  ) : (
+    <View style={styles.edgeBtn} />
+  );
 
   // RIGHT ICONS
   const renderRight = (
     <View style={styles.rightRow}>
       {(rightIcons || []).map((ri, idx) => {
-        if (ri.type === "themeToggle")
+        if (ri.type === "themeToggle") {
+          const ThemeIcon = effectiveMode === "dark" ? AppIcons.sun : AppIcons.moon;
           return (
             <Pressable
               key={`theme-${idx}`}
@@ -103,13 +103,10 @@ export default function UniversalHeader({
                 toggle();
               }}
             >
-              <Feather
-                name={effectiveMode === "dark" ? "sun" : "moon"}
-                size={20}
-                color={theme.headerIcon}
-              />
+              <ThemeIcon size={20} color={theme.headerIcon} />
             </Pressable>
           );
+        }
 
         if (ri.type === "custom")
           return (
@@ -118,20 +115,28 @@ export default function UniversalHeader({
             </View>
           );
 
-        // Default: normal icon
+        // Default: normal icon (type === "icon" or undefined)
+        const iconData = ri as { icon: IconName; onPress?: () => void; color?: ColorValue; iconProps?: any };
+        const IconComponent = AppIcons[iconData.icon];
+        
+        if (!IconComponent) {
+          console.warn(`Icon "${iconData.icon}" not found in AppIcons`);
+          return null;
+        }
+        
         return (
           <Pressable
             key={`icon-${idx}`}
             style={styles.edgeBtn}
             onPress={() => {
               doHaptic();
-              (ri as any).onPress?.();
+              iconData.onPress?.();
             }}
           >
-            <Feather
-              name={(ri as any).icon}
+            <IconComponent
               size={22}
-              color={(ri as any).color || theme.headerIcon}
+              color={iconData.color || theme.headerIcon}
+              {...iconData.iconProps}
             />
           </Pressable>
         );
@@ -209,7 +214,7 @@ const styles = StyleSheet.create({
   },
   row: {
     height: HEADER_BODY,
-    paddingHorizontal: 12,
+    paddingHorizontal: 2,  // Changed from 12 to 2 (10px closer)
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

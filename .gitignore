@@ -32,6 +32,13 @@ expo-env.d.ts
 .env
 .env.*
 .env*.local
+.env.local
+.env.development
+.env.production
+
+# Expo / EAS env artifacts
+.env.expo
+.env.eas
 
 # =========================================
 # Debug logs
@@ -81,3 +88,4 @@ pnpm-debug.log*
 # Misc
 # =========================================
 *.log
+*.swp

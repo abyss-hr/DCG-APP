@@ -18,6 +18,7 @@ import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { ColorTheme } from "@/theme/colors";
 import { typography } from "@/theme";
+import TouchableHaptic from "@/components/ui/TouchableHaptic";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
@@ -166,12 +167,12 @@ export default function FilterByModal({
           </View>
 
           {hasFilters && (
-            <TouchableOpacity onPress={handleReset} style={styles.headerResetBtn}>
+            <TouchableHaptic onPress={handleReset} style={styles.headerResetBtn} haptic="light">
               <Feather name="x" size={18} color={theme.subtitle} />
               <Text style={{ color: theme.subtitle, marginLeft: 6 }}>
                 Reset
               </Text>
-            </TouchableOpacity>
+            </TouchableHaptic>
           )}
         </View>
 
@@ -194,7 +195,7 @@ export default function FilterByModal({
               {options.categories.map((cat) => {
                 const sel = options.selectedCategories.includes(cat);
                 return (
-                  <TouchableOpacity
+                  <TouchableHaptic
                     key={cat}
                     onPress={() => toggleCategory(cat)}
                     style={[
@@ -204,7 +205,7 @@ export default function FilterByModal({
                         borderColor: sel ? theme.button : theme.border,
                       },
                     ]}
-                    activeOpacity={0.7}
+                    haptic="light"
                   >
                     <Text
                       style={{
@@ -214,7 +215,7 @@ export default function FilterByModal({
                     >
                       {cat}
                     </Text>
-                  </TouchableOpacity>
+                  </TouchableHaptic>
                 );
               })}
             </View>
@@ -235,7 +236,7 @@ export default function FilterByModal({
 
             <View style={styles.toggleRow}>
               {/* NEAR ME */}
-              <TouchableOpacity
+              <TouchableHaptic
                 onPress={toggleNearMe}
                 style={[
                   styles.toggleChip,
@@ -246,7 +247,7 @@ export default function FilterByModal({
                     borderColor: options.nearMe ? theme.button : theme.border,
                   },
                 ]}
-                activeOpacity={0.75}
+                haptic="light"
               >
                 <Feather
                   name="navigation"
@@ -262,10 +263,10 @@ export default function FilterByModal({
                 >
                   Near Me
                 </Text>
-              </TouchableOpacity>
+              </TouchableHaptic>
 
               {/* FEATURED ONLY */}
-              <TouchableOpacity
+              <TouchableHaptic
                 onPress={toggleFeatured}
                 style={[
                   styles.toggleChip,
@@ -276,7 +277,7 @@ export default function FilterByModal({
                     borderColor: options.featuredOnly ? theme.button : theme.border,
                   },
                 ]}
-                activeOpacity={0.75}
+                haptic="light"
               >
                 <Feather
                   name="star"
@@ -292,36 +293,38 @@ export default function FilterByModal({
                 >
                   Featured only
                 </Text>
-              </TouchableOpacity>
+              </TouchableHaptic>
             </View>
           </View>
         </ScrollView>
 
         {/* FOOTER */}
         <View style={styles.footerRow}>
-          <TouchableOpacity
+          <TouchableHaptic
             onPress={handleReset}
             style={[
               styles.footerBtn,
               { backgroundColor: theme.cardBackground, borderColor: theme.border },
             ]}
+            haptic="light"
           >
             <Text style={{ textAlign: "center", color: theme.subtitle }}>
               Reset
             </Text>
-          </TouchableOpacity>
+          </TouchableHaptic>
 
-          <TouchableOpacity
+          <TouchableHaptic
             onPress={handleApply}
             style={[
               styles.footerBtn,
               { backgroundColor: theme.button, borderColor: theme.button },
             ]}
+            haptic="medium"
           >
             <Text style={{ textAlign: "center", color: "#fff" }}>
               Apply filters
             </Text>
-          </TouchableOpacity>
+          </TouchableHaptic>
         </View>
       </Animated.View>
     </Modal>

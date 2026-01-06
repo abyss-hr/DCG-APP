@@ -1,7 +1,32 @@
 {
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit",
-    "source.organizeImports": "explicit",
-    "source.sortMembers": "explicit"
-  }
+  // FAST IntelliSense + no node_modules scanning
+  "typescript.tsserver.maxTsServerMemory": 4096,
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "typescript.preferences.useProjectWideIntellisense": false,
+
+  // Prevent VS Code from showing expo-linear-gradient TS errors
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.expo/**": true,
+    "**/.expo-shared/**": true
+  },
+
+  // Exclude problematic package config files from TS validation
+  "files.exclude": {
+    "**/node_modules/expo-image/tsconfig.json": true,
+    "**/node_modules/expo-maps/tsconfig.json": true,
+    "**/node_modules/expo-constants/tsconfig.json": true,
+    "**/node_modules/expo-*/tsconfig.json": true
+  },
+
+  // React Native wants this
+  "javascript.validate.enable": false,
+  "typescript.validate.enable": true,
+
+  // Expo Router auto import fixes
+  "path-autocomplete.extensionOnImport": true,
+  "path-autocomplete.absolutePathToWorkspace": false,
+  "path-autocomplete.transformations": [
+    { "type": "replace", "parameters": { "replace": "src/", "with": "" } }
+  ]
 }

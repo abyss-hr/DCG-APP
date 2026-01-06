@@ -1,10 +1,10 @@
 // components/ui/ToolbarRow.tsx
 import React from 'react';
 import { View, StyleSheet, Pressable, Text } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { ChevronDown, Filter } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { ColorTheme } from '@/theme/colors';
-import { typography } from '@/theme';
+import { typography, AppIcons } from '@/theme';
 
 type Props = {
   theme: ColorTheme;
@@ -25,6 +25,8 @@ export default function ToolbarRow({
   onOpenFilter,
   filterLabel,
 }: Props) {
+  const ZoomIcon = layout === 'list' ? AppIcons.zoomIn : AppIcons.zoomOut;
+
   return (
     <View style={[styles.toolbar, { borderColor: theme.cardBorder }]}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -40,11 +42,11 @@ export default function ToolbarRow({
             ]}
             accessibilityRole="button"
           >
-            <Feather name="filter" size={18} color={theme.button} />
+            <Filter size={18} color={theme.button} />
             <Text style={{ marginLeft: 6, color: theme.text, fontSize: typography.button.fontSize }}>
               {filterLabel ?? 'Filter'}
             </Text>
-            <Feather name="chevron-down" size={18} color={theme.subtitle} style={{ marginLeft: 6 }} />
+            <ChevronDown size={18} color={theme.subtitle} style={{ marginLeft: 6 }} />
           </Pressable>
         ) : null}
 
@@ -64,11 +66,7 @@ export default function ToolbarRow({
           { borderColor: theme.border, backgroundColor: theme.transparent },
         ]}
       >
-        <Feather
-          name={layout === 'list' ? 'zoom-in' : 'zoom-out'}
-          size={20}
-          color={theme.subtitle}
-        />
+        <ZoomIcon size={20} color={theme.button} />
       </Pressable>
     </View>
   );

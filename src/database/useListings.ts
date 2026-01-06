@@ -15,7 +15,8 @@ export function useListings() {
 
       setData(mapped);                                // 3) SAVE IN STATE
     } catch (err) {
-      console.error("useListings error:", err);
+      console.error("[useListings] error:", err);
+      setData([]);                                    // Clear data on error
     } finally {
       setLoading(false);
     }

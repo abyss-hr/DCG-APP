@@ -124,7 +124,7 @@ export default function FavoritesScreen() {
       <UniversalHeader
         title="Favorites"
         scrollY={scrollY}
-        left={{ icon: 'chevron-left', autoBack: true }}
+        left={{ icon: 'back', autoBack: true }}
         rightIcons={[
           {
             type: 'icon',
@@ -133,7 +133,7 @@ export default function FavoritesScreen() {
           },
           {
             type: 'icon',
-            icon: 'grid',
+            icon: 'menu',
             onPress: () => navigation.getParent()?.openDrawer?.(),
           },
         ]}

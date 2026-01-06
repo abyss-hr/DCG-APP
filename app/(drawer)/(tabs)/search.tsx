@@ -1,6 +1,6 @@
 import * as Haptics from "expo-haptics";
 import { useNavigation } from "expo-router";
-import { LayoutGrid, LayoutList, SlidersHorizontal } from "lucide-react-native";
+import { SlidersHorizontal } from "lucide-react-native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -29,7 +29,7 @@ import UniversalHeader, {
   getHeaderHeights,
 } from "@/components/ui/UniversalHeader";
 
-import { GradientBackground, typography, useTheme } from "@/theme";
+import { GradientBackground, typography, useTheme, AppIcons } from "@/theme";
 
 import {
   calculateDistance,
@@ -212,10 +212,11 @@ export default function SearchScreen() {
   };
 
   const onToggleLayout = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     toggleZoom();
   };
 
-  const layoutIcon = zoomMode === "list" ? LayoutGrid : LayoutList;
+  const ZoomIcon = zoomMode === "list" ? AppIcons.zoomIn : AppIcons.zoomOut;
 
   const onClearAllFilters = () => {
     setFilterOptions((prev) => ({
@@ -245,12 +246,17 @@ export default function SearchScreen() {
       <UniversalHeader
         title="Search"
         scrollY={scrollY}
-        left={{ icon: "chevron-left", autoBack: true }}
+        left={{ icon: "back", autoBack: true }}
         rightIcons={[
           {
             type: "icon",
             icon: "settings",
             onPress: () => setSettingsVisible(true),
+          },
+          {
+            type: "icon",
+            icon: "menu",
+            onPress: () => navigation.getParent()?.openDrawer?.(),
           },
         ]}
       />
@@ -307,14 +313,14 @@ export default function SearchScreen() {
                 onPress={onToggleLayout}
                 style={[styles.iconButton, { borderColor: theme.border }]}
               >
-                {React.createElement(layoutIcon, {
-                  size: 20,
-                  color: theme.subtitle,
-                })}
+                <ZoomIcon size={20} color={theme.button} />
               </Pressable>
 
               <Pressable
-                onPress={() => setFilterVisible(true)}
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  setFilterVisible(true);
+                }}
                 style={[styles.iconButton, { borderColor: theme.border }]}
               >
                 <SlidersHorizontal size={20} color={theme.button} />

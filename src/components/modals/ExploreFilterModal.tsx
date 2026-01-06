@@ -13,6 +13,7 @@ import {
   Dimensions,
   Text,
 } from "react-native";
+import TouchableHaptic from "@/components/ui/TouchableHaptic";
 
 import {
   Utensils,
@@ -175,14 +176,20 @@ export default function ExploreFilterModal({
     });
   };
 
-  const toggleMode = (mode: "category" | "place") =>
+  const toggleMode = (mode: "category" | "place") => {
+    Haptics.selectionAsync();
     onChange({ ...options, mode });
+  };
 
-  const toggleNearMe = () =>
+  const toggleNearMe = () => {
+    Haptics.selectionAsync();
     onChange({ ...options, nearMe: !options.nearMe });
+  };
 
-  const toggleFeatured = () =>
+  const toggleFeatured = () => {
+    Haptics.selectionAsync();
     onChange({ ...options, featuredOnly: !options.featuredOnly });
+  };
 
   if (!visible) return null;
 
@@ -222,17 +229,22 @@ export default function ExploreFilterModal({
             </Text>
           </View>
 
-          {hasFilters && (
-            <TouchableOpacity onPress={resetAll} style={styles.resetBtn}>
-              <X size={18} color={theme.subtitle} />
-            </TouchableOpacity>
-          )}
+          <TouchableHaptic
+            onPress={async () => {
+              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              slideDown(onClose);
+            }} 
+            style={styles.resetBtn}
+            haptic="none"
+          >
+            <X size={18} color={theme.subtitle} />
+          </TouchableHaptic>
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* MODE SWITCH */}
           <View style={styles.modeRow}>
-            <TouchableOpacity
+            <TouchableHaptic
               onPress={() => toggleMode("category")}
               style={[
                 styles.modeBtn,
@@ -241,8 +253,11 @@ export default function ExploreFilterModal({
                     options.mode === "category"
                       ? theme.button
                       : theme.cardBackground,
+                  borderWidth: options.mode === "category" ? 0 : 1,
+                  borderColor: options.mode === "category" ? 'transparent' : theme.button + '40',
                 },
               ]}
+              haptic="light"
             >
               <Tags
                 size={16}
@@ -257,9 +272,9 @@ export default function ExploreFilterModal({
               >
                 Category
               </Text>
-            </TouchableOpacity>
+            </TouchableHaptic>
 
-            <TouchableOpacity
+            <TouchableHaptic
               onPress={() => toggleMode("place")}
               style={[
                 styles.modeBtn,
@@ -268,8 +283,11 @@ export default function ExploreFilterModal({
                     options.mode === "place"
                       ? theme.button
                       : theme.cardBackground,
+                  borderWidth: options.mode === "place" ? 0 : 1,
+                  borderColor: options.mode === "place" ? 'transparent' : theme.button + '40',
                 },
               ]}
+              haptic="light"
             >
               <MapPin
                 size={16}
@@ -284,7 +302,7 @@ export default function ExploreFilterModal({
               >
                 Place
               </Text>
-            </TouchableOpacity>
+            </TouchableHaptic>
           </View>
 
           {/* CATEGORY / PLACE LIST */}
@@ -299,7 +317,7 @@ export default function ExploreFilterModal({
 
             <View style={styles.chipsWrap}>
               {/* All chip */}
-              <TouchableOpacity
+              <TouchableHaptic
                 onPress={() =>
                   onChange({
                     ...options,
@@ -315,8 +333,19 @@ export default function ExploreFilterModal({
                       options.selectedPlaces.length === 0
                         ? theme.button
                         : theme.cardBackground,
+                    borderWidth:
+                      options.selectedCategories.length === 0 &&
+                      options.selectedPlaces.length === 0
+                        ? 0
+                        : 1,
+                    borderColor:
+                      options.selectedCategories.length === 0 &&
+                      options.selectedPlaces.length === 0
+                        ? 'transparent'
+                        : theme.button + '40',
                   },
                 ]}
+                haptic="light"
               >
                 <Text
                   style={{
@@ -329,7 +358,7 @@ export default function ExploreFilterModal({
                 >
                   All
                 </Text>
-              </TouchableOpacity>
+              </TouchableHaptic>
 
               {(options.mode === "category"
                 ? options.categories
@@ -346,7 +375,7 @@ export default function ExploreFilterModal({
                     : options.selectedPlaces.includes(label);
 
                 return (
-                  <TouchableOpacity
+                  <TouchableHaptic
                     key={label}
                     onPress={() =>
                       options.mode === "category"
@@ -359,8 +388,11 @@ export default function ExploreFilterModal({
                         backgroundColor: isSel
                           ? theme.button
                           : theme.cardBackground,
+                        borderWidth: isSel ? 0 : 1,
+                        borderColor: isSel ? 'transparent' : theme.button + '40',
                       },
                     ]}
+                    haptic="light"
                   >
                     <Icon
                       size={14}
@@ -375,7 +407,7 @@ export default function ExploreFilterModal({
                     >
                       {label}
                     </Text>
-                  </TouchableOpacity>
+                  </TouchableHaptic>
                 );
               })}
             </View>
@@ -391,7 +423,7 @@ export default function ExploreFilterModal({
 
             <View style={styles.optionsRow}>
               {/* NEAR ME */}
-              <TouchableOpacity
+              <TouchableHaptic
                 onPress={toggleNearMe}
                 style={[
                   styles.optionChip,
@@ -399,8 +431,11 @@ export default function ExploreFilterModal({
                     backgroundColor: options.nearMe
                       ? theme.button
                       : theme.cardBackground,
+                    borderWidth: options.nearMe ? 0 : 1,
+                    borderColor: options.nearMe ? 'transparent' : theme.button + '40',
                   },
                 ]}
+                haptic="light"
               >
                 <Navigation
                   size={16}
@@ -415,10 +450,10 @@ export default function ExploreFilterModal({
                 >
                   Near Me
                 </Text>
-              </TouchableOpacity>
+              </TouchableHaptic>
 
               {/* FEATURED - ACTIVE BY DEFAULT */}
-              <TouchableOpacity
+              <TouchableHaptic
                 onPress={toggleFeatured}
                 style={[
                   styles.optionChip,
@@ -426,8 +461,11 @@ export default function ExploreFilterModal({
                     backgroundColor: options.featuredOnly
                       ? theme.button
                       : theme.cardBackground,
+                    borderWidth: options.featuredOnly ? 0 : 1,
+                    borderColor: options.featuredOnly ? 'transparent' : theme.button + '40',
                   },
                 ]}
+                haptic="light"
               >
                 <Star
                   size={16}
@@ -442,36 +480,48 @@ export default function ExploreFilterModal({
                 >
                   Featured
                 </Text>
-              </TouchableOpacity>
+              </TouchableHaptic>
             </View>
           </View>
         </ScrollView>
 
         {/* FOOTER */}
         <View style={styles.footerRow}>
-          <TouchableOpacity
-            onPress={resetAll}
+          <TouchableHaptic
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              resetAll();
+            }}
             style={[
               styles.footerBtn,
-              { backgroundColor: theme.cardBackground },
+              { 
+                backgroundColor: theme.cardBackground,
+                borderWidth: 1,
+                borderColor: theme.button + '40',
+              },
             ]}
+            haptic="none"
           >
             <Text style={{ textAlign: "center", color: theme.text }}>
               Reset
             </Text>
-          </TouchableOpacity>
+          </TouchableHaptic>
 
-          <TouchableOpacity
-            onPress={() => slideDown(onClose)}
+          <TouchableHaptic
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              slideDown(onClose);
+            }}
             style={[
               styles.footerBtn,
               { backgroundColor: theme.button },
             ]}
+            haptic="none"
           >
             <Text style={{ textAlign: "center", color: "#fff" }}>
               Apply
             </Text>
-          </TouchableOpacity>
+          </TouchableHaptic>
         </View>
       </Animated.View>
     </Modal>

@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import TouchableHaptic from '@/components/ui/TouchableHaptic';
 import type { Listing } from '../../database/Listing';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -42,7 +43,7 @@ export function ListingCard({ listing, onPress, showBadge = true }: Props) {
   const badgeColor = isPromoted ? '#FFD700' : '#00A896';
 
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
+    <TouchableHaptic style={styles.card} onPress={onPress} haptic="light">
       {/* Image Gallery with horizontal scroll */}
       <View style={styles.imageContainer}>
         {allImages.length > 0 ? (
@@ -153,7 +154,7 @@ export function ListingCard({ listing, onPress, showBadge = true }: Props) {
           </View>
         )}
       </View>
-    </TouchableOpacity>
+    </TouchableHaptic>
   );
 }
 

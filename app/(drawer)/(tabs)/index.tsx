@@ -96,7 +96,7 @@ export default function HomePage() {
         size: 'single',
         title: 'Explore city & islands',
         imageUrl:
-          'https://bhyqswfynsnqxzuukigp.supabase.co/storage/v1/object/public/listings-images/home_experience.webp',
+          'https://firebasestorage.googleapis.com/v0/b/dubrovnikcityapp.firebasestorage.app/o/home_popular.webp?alt=media&token=8e55faee-f713-462d-945e-73afbb292fc3',
         onPress: () => goTo('explore'),
       },
       {

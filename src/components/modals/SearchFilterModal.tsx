@@ -177,14 +177,20 @@ export default function SearchFilterModal({
     });
   };
 
-  const toggleMode = (mode: "category" | "place") =>
+  const toggleMode = (mode: "category" | "place") => {
+    Haptics.selectionAsync();
     onChange({ ...options, mode });
+  };
 
-  const toggleNearMe = () =>
+  const toggleNearMe = () => {
+    Haptics.selectionAsync();
     onChange({ ...options, nearMe: !options.nearMe });
+  };
 
-  const toggleFeatured = () =>
+  const toggleFeatured = () => {
+    Haptics.selectionAsync();
     onChange({ ...options, featuredOnly: !options.featuredOnly });
+  };
 
   if (!visible) return null;
 
@@ -224,11 +230,15 @@ export default function SearchFilterModal({
             </Text>
           </View>
 
-          {hasFilters && (
-            <TouchableOpacity onPress={resetAll} style={styles.resetBtn}>
-              <X size={18} color={theme.subtitle} />
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity 
+            onPress={async () => {
+              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              slideDown(onClose);
+            }} 
+            style={styles.resetBtn}
+          >
+            <X size={18} color={theme.subtitle} />
+          </TouchableOpacity>
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -243,6 +253,8 @@ export default function SearchFilterModal({
                     options.mode === "category"
                       ? theme.button
                       : theme.cardBackground,
+                  borderWidth: options.mode === "category" ? 0 : 1,
+                  borderColor: options.mode === "category" ? 'transparent' : theme.button + '40',
                 },
               ]}
             >
@@ -270,6 +282,8 @@ export default function SearchFilterModal({
                     options.mode === "place"
                       ? theme.button
                       : theme.cardBackground,
+                  borderWidth: options.mode === "place" ? 0 : 1,
+                  borderColor: options.mode === "place" ? 'transparent' : theme.button + '40',
                 },
               ]}
             >
@@ -317,6 +331,16 @@ export default function SearchFilterModal({
                       options.selectedPlaces.length === 0
                         ? theme.button
                         : theme.cardBackground,
+                    borderWidth:
+                      options.selectedCategories.length === 0 &&
+                      options.selectedPlaces.length === 0
+                        ? 0
+                        : 1,
+                    borderColor:
+                      options.selectedCategories.length === 0 &&
+                      options.selectedPlaces.length === 0
+                        ? 'transparent'
+                        : theme.button + '40',
                   },
                 ]}
               >
@@ -361,6 +385,8 @@ export default function SearchFilterModal({
                         backgroundColor: isSel
                           ? theme.button
                           : theme.cardBackground,
+                        borderWidth: isSel ? 0 : 1,
+                        borderColor: isSel ? 'transparent' : theme.button + '40',
                       },
                     ]}
                   >
@@ -401,6 +427,8 @@ export default function SearchFilterModal({
                     backgroundColor: options.nearMe
                       ? theme.button
                       : theme.cardBackground,
+                    borderWidth: options.nearMe ? 0 : 1,
+                    borderColor: options.nearMe ? 'transparent' : theme.button + '40',
                   },
                 ]}
               >
@@ -428,6 +456,8 @@ export default function SearchFilterModal({
                     backgroundColor: options.featuredOnly
                       ? theme.button
                       : theme.cardBackground,
+                    borderWidth: options.featuredOnly ? 0 : 1,
+                    borderColor: options.featuredOnly ? 'transparent' : theme.button + '40',
                   },
                 ]}
               >
@@ -452,10 +482,17 @@ export default function SearchFilterModal({
         {/* FOOTER */}
         <View style={styles.footerRow}>
           <TouchableOpacity
-            onPress={resetAll}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              resetAll();
+            }}
             style={[
               styles.footerBtn,
-              { backgroundColor: theme.cardBackground },
+              { 
+                backgroundColor: theme.cardBackground,
+                borderWidth: 1,
+                borderColor: theme.button + '40',
+              },
             ]}
           >
             <Text style={{ textAlign: "center", color: theme.text }}>
@@ -464,7 +501,10 @@ export default function SearchFilterModal({
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => slideDown(onClose)}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              slideDown(onClose);
+            }}
             style={[
               styles.footerBtn,
               { backgroundColor: theme.button },
