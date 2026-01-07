@@ -20,3 +20,9 @@ This file is a lightweight, human log of important repo changes (especially secu
 
 ## 2026-01-07 18:21 CET
 - Added dependency reference notes: `DEPENDENCIES_NOTES.md`.
+
+## 2026-01-07 19:19 CET
+- Added dependency comparison analysis: `DEPENDENCY_COMPARISON.md`.
+  - Compares current DCG stack with recommended expo-playground reference stack.
+  - Identifies performance improvements (expo-image, FlashList, React Query).
+  - No code changes made (analysis only).
