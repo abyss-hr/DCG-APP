@@ -1,16 +1,32 @@
 // src/firebase/firebaseConfig.ts
+import Constants from "expo-constants";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
+const extra = (Constants.expoConfig?.extra ?? (Constants as any).manifest?.extra ?? {}) as Record<
+  string,
+  unknown
+>;
+
+const requireExtraString = (key: string) => {
+  const value = extra[key];
+  if (typeof value !== "string" || value.trim().length === 0) {
+    throw new Error(
+      `Missing Expo config extra: ${key}. Configure it via app.config.js and env vars.`
+    );
+  }
+  return value;
+};
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBIeUhtKvancPltHOozpC3Ckp0U1MaMX8A",
-  authDomain: "dubrovnikcityapp.firebaseapp.com",
-  projectId: "dubrovnikcityapp",
-  storageBucket: "dubrovnikcityapp.firebasestorage.app",  // ✅ KEEP THIS
-  messagingSenderId: "984840969484",
-  appId: "1:984840969484:web:0520beb8a148a300febd29",
-  measurementId: "G-2QJ4MWC22M",
+  apiKey: requireExtraString("firebaseApiKey"),
+  authDomain: requireExtraString("firebaseAuthDomain"),
+  projectId: requireExtraString("firebaseProjectId"),
+  storageBucket: requireExtraString("firebaseStorageBucket"),
+  messagingSenderId: requireExtraString("firebaseMessagingSenderId"),
+  appId: requireExtraString("firebaseAppId"),
+  measurementId: requireExtraString("firebaseMeasurementId"),
 };
 
 const app = initializeApp(firebaseConfig);

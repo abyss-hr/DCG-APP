@@ -205,9 +205,18 @@ export default function SettingsModal({ visible, onClose }: SettingsModalProps) 
   };
 
   const handleAdminLogin = () => {
-    // 👇 EDIT ADMIN PASSWORD HERE
-    const ADMIN_PASSWORD = "2307986";
-    
+    const ADMIN_PASSWORD = process.env.EXPO_PUBLIC_ADMIN_PASSWORD;
+
+    if (!ADMIN_PASSWORD) {
+      Alert.alert(
+        "Admin Disabled",
+        "Admin access is not configured for this build."
+      );
+      setAdminPassword("");
+      setShowAdminPrompt(false);
+      return;
+    }
+
     if (adminPassword === ADMIN_PASSWORD) {
       setShowAdminPrompt(false);
       setAdminPassword("");
