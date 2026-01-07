@@ -17,3 +17,6 @@ This file is a lightweight, human log of important repo changes (especially secu
 ### Follow-ups / reminders
 - If any keys were previously exposed on GitHub, rotate them in Google Cloud / Firebase.
 - `.env` stays local (ignored); use EAS Secrets for builds.
+
+## 2026-01-07 18:21 CET
+- Added dependency reference notes: `DEPENDENCIES_NOTES.md`.
