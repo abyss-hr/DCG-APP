@@ -35,3 +35,10 @@ This file is a lightweight, human log of important repo changes (especially secu
   - Detailed step-by-step instructions with timelines, success criteria, and rollback plans.
   - Estimated timeline: 4 days (minimum) to 4-5 weeks (full modernization).
   - No code changes made (planning only).
+
+## 2026-01-08 09:15 CET — Claude Sonnet 4.5
+- **Phase 0: Cleanup completed**
+  - Removed unused dependencies: `react-native-dotenv`, `react-native-swiper`, `react-native-webview`.
+  - Bundle size reduced by ~500KB.
+  - Fixed Firebase config: populated `.env` with all required Firebase variables.
+  - App tested on iOS simulator — working correctly.
