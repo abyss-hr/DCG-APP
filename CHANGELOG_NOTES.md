@@ -28,3 +28,10 @@ This file is a lightweight, human log of important repo changes (especially secu
   - Compares current DCG stack with recommended expo-playground reference stack.
   - Identifies performance improvements (expo-image, FlashList, React Query).
   - No code changes made (analysis only).
+
+## 2026-01-08 08:37 CET — Claude Sonnet 4.5
+- Added phased refactoring plan: `REFACTOR_PLAN.md`.
+  - 4 phases: Cleanup → Performance → State Management → Styling/Polish.
+  - Detailed step-by-step instructions with timelines, success criteria, and rollback plans.
+  - Estimated timeline: 4 days (minimum) to 4-5 weeks (full modernization).
+  - No code changes made (planning only).
