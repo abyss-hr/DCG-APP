@@ -4,6 +4,25 @@ This file is a lightweight, human log of important repo changes (especially secu
 
 **Agent attribution:** Each entry includes the AI agent name (e.g., Claude Sonnet 4.5, GPT 5.2) for tracking who made the changes.
 
+## 2026-01-08 16:45 CET — Claude Sonnet 4.5
+### Phase 0 Cleanup - COMPLETED ✅
+- **Admin Panel Removal**:
+  - Created ADMIN.md with comprehensive documentation (250+ lines)
+  - Documented stats dashboard features, technical implementation, UI design
+  - Included migration plan for future web dashboard
+  - Removed admin.tsx (472 lines) and admin navigation from drawer layout
+- **Unused File Deletion**:
+  - Deleted [id] copy.tsx (299 lines duplicate)
+  - Deleted map.tsx (fullscreen map not needed)
+  - Deleted settings.tsx (610 lines, unused - settings are in modal)
+  - Deleted .DS_Store (macOS system file)
+  - Total: ~1,850 lines removed
+- **Code Cleanup**:
+  - Fixed duplicate export in search.tsx (removed redundant line 430)
+  - Verified default exports in explore.tsx and search.tsx working correctly
+- **Bundle Size Impact**: ~500KB from dependencies + reduced app size from file removal
+- **Commit**: fd95359 "chore(phase-0): complete cleanup - remove admin navigation and fix duplicate exports"
+
 ## 2026-01-07 17:45 CET — Claude Sonnet 4.5
 - Created a GitHub backup tag: `backup-2026-01-07` (points to commit `f3849bc`).
 - Created a work branch for changes: `feat/work-2026-01-07`.
