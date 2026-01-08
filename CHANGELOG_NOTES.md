@@ -2,7 +2,9 @@
 
 This file is a lightweight, human log of important repo changes (especially security/config). Add a new entry whenever you make a meaningful change.
 
-## 2026-01-07 17:45 CET
+**Agent attribution:** Each entry includes the AI agent name (e.g., Claude Sonnet 4.5, GPT 5.2) for tracking who made the changes.
+
+## 2026-01-07 17:45 CET — Claude Sonnet 4.5
 - Created a GitHub backup tag: `backup-2026-01-07` (points to commit `f3849bc`).
 - Created a work branch for changes: `feat/work-2026-01-07`.
 - Removed hardcoded admin password from the app:
@@ -18,10 +20,10 @@ This file is a lightweight, human log of important repo changes (especially secu
 - If any keys were previously exposed on GitHub, rotate them in Google Cloud / Firebase.
 - `.env` stays local (ignored); use EAS Secrets for builds.
 
-## 2026-01-07 18:21 CET
+## 2026-01-07 18:21 CET — Claude Sonnet 4.5
 - Added dependency reference notes: `DEPENDENCIES_NOTES.md`.
 
-## 2026-01-07 19:19 CET
+## 2026-01-07 19:19 CET — Claude Sonnet 4.5
 - Added dependency comparison analysis: `DEPENDENCY_COMPARISON.md`.
   - Compares current DCG stack with recommended expo-playground reference stack.
   - Identifies performance improvements (expo-image, FlashList, React Query).
