@@ -89,16 +89,6 @@ function CustomDrawerContent(props: any) {
           }}
         />
 
-        {/* Admin Section */}
-        <DrawerItem
-          label={() => <Text style={[TEXT_STYLE, { color: '#FF6B6B' }]}>Admin Hub</Text>}
-          icon={() => <Feather name="shield" size={ICON_SIZE} color="#FF6B6B" />}
-          onPress={() => {
-            doHaptic();
-            props.navigation.navigate('admin');
-          }}
-        />
-
         {/* Spacer to push footer to bottom */}
         <View style={{ flex: 1 }} />
 
