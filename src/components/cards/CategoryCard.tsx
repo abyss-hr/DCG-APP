@@ -1,6 +1,7 @@
 // src/components/cards/CategoryCard.tsx
 import React from "react";
-import { View, StyleSheet, Image, Pressable, Text } from "react-native";
+import { View, StyleSheet, Pressable, Text } from "react-native";
+import { Image } from "expo-image";
 import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 

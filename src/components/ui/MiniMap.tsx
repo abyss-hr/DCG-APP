@@ -1,6 +1,7 @@
 // src/components/ui/MiniMap.tsx
 import React, { useRef } from 'react';
-import { View, StyleSheet, Pressable, Platform, Linking, Image, Text } from 'react-native';
+import { View, StyleSheet, Pressable, Platform, Linking, Text } from 'react-native';
+import { Image } from 'expo-image';
 import { Feather } from '@expo/vector-icons';
 
 // Only use native maps on iOS, static map on Android

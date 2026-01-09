@@ -11,6 +11,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { FlashList } from "@shopify/flash-list";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import ResultCard from "@/components/cards/ResultCard";
@@ -261,9 +262,10 @@ export default function SearchScreen() {
         ]}
       />
 
-      <Animated.FlatList
+      <FlashList
         data={rows}
         keyExtractor={(item) => item.id}
+        estimatedItemSize={zoomMode === "list" ? 120 : 200}
         renderItem={({ item }) => {
           const distanceLabel =
             typeof item.distance === "number"
@@ -276,7 +278,6 @@ export default function SearchScreen() {
             <ResultCardZoom item={item} theme={theme} distance={distanceLabel} />
           );
         }}
-        scrollEventThrottle={16}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: true }
@@ -286,6 +287,7 @@ export default function SearchScreen() {
           paddingBottom: 24,
           paddingHorizontal: SCREEN_PAD,
         }}
+        ItemSeparatorComponent={() => <View style={{ height: 0 }} />}
         keyboardShouldPersistTaps="handled"
         refreshControl={
           <RefreshControl
