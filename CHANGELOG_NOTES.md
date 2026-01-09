@@ -61,3 +61,22 @@ This file is a lightweight, human log of important repo changes (especially secu
   - Verified default exports in explore.tsx and search.tsx working correctly
 - **Bundle Size Impact**: ~500KB from dependencies + reduced app size from file removal
 - **Commit**: fd95359 "chore(phase-0): complete cleanup - remove admin navigation and fix duplicate exports"
+
+## 2026-01-09 10:30 CET — Claude Sonnet 4.5
+### Phase 1: Performance Improvements - COMPLETED ✅
+- **expo-image Migration**:
+  - Replaced React Native Image with expo-image in CategoryCard.tsx
+  - Replaced React Native Image with expo-image in MiniMap.tsx
+  - Benefits: Progressive loading, better caching, reduced memory usage
+- **FlashList Implementation**:
+  - Installed @shopify/flash-list (Shopify's high-performance list component)
+  - Replaced FlatList with FlashList in search.tsx
+  - Configured estimatedItemSize: 120px (list mode), 200px (grid mode)
+  - Benefits: 10x better scroll performance, reduced blank cells during fast scrolling
+- **Documentation**:
+  - Created SRC-COMPONENTS.md (41 component inventory with usage tracking)
+  - Created TODO.md (task tracking for all phases)
+- **Notes**:
+  - Horizontal category FlatList in index.tsx kept as-is (small dataset, horizontal scroll)
+  - explore.tsx and favorites.tsx use ScrollView (not affected)
+- **Commit**: 6b2088d "feat(phase-1): implement performance improvements with expo-image and FlashList"
